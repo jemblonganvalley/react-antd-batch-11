@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom"
-import { AiOutlineDashboard, AiOutlineUser, AiOutlineSetting, AiOutlineMenu } from "react-icons/ai"
+import { AiOutlineDashboard, AiOutlineUser, AiOutlineSetting, AiOutlineMenu, AiOutlineLogout } from "react-icons/ai"
 import { Menu } from 'antd'
+import supabase from '../supabase'
 
 const Layout = () => {
 
@@ -32,6 +33,19 @@ const Layout = () => {
             icon: <AiOutlineSetting />,
             label: "setting",
             onClick: () => { navigate("/setting") }
+        },
+        {
+            key : "/logout",
+            icon : <AiOutlineLogout />,
+            label : "logout",
+            onClick : ()=>{
+                supabase.auth.signOut()
+                .then(res => {
+                    console.info(res)
+                    window.location.href = '/'
+                })
+            }
+
         }
     ]
 
