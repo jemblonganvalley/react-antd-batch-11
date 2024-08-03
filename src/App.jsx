@@ -5,6 +5,7 @@ import Layout from './screen/Layout'
 import PageNotFound from './screen/PageNotFound'
 import supabase from './supabase'
 import Register from './screen/login/Register'
+import Attendances from './screen/attendances/Attendances'
 
 const App = () => {
 
@@ -32,7 +33,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Layout />} >
           <Route index element={<h1>Dashboard</h1>} />
-          <Route path='attendances' element={<h1>Attendances</h1>} />
+          <Route path='attendances' element={ <Attendances /> } />
           <Route path='setting' element={<h1>setting</h1>} />
           <Route path='*' element={<h1> page not found ! </h1>} />
         </Route>
