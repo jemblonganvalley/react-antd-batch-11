@@ -1,70 +1,38 @@
-import React, { useState } from 'react'
-import { Alert, Button, Form, Input } from "antd"
+import React from 'react'
+import { Button, Form, Input } from "antd"
 import { NavLink } from 'react-router-dom'
 import supabase from '../../supabase'
 
-const Login = () => {
+const Register = () => {
 
-    const [state, setState] = useState({
-        isLoading: false,
-        isError: false
-    })
 
-    function handleSubmit(e) {
-        const { email, password } = e
+    function handleSubmit(e){
+        
+        let { email, password, repassword } = e
 
-        // setLoading jadi true
-        setState(prev => prev = {
-            ...prev,
-            isLoading: true
+        // jika password dan repassword tidak sama
+        if(password !== repassword){
+            return alert("password harus sama !")
+        }
+
+        supabase.auth.signUp({
+            email : email,
+            password : password
+        })
+        .then(res => {
+            console.info(res)
+        })
+        .catch(err => {
+            console.info(err)
         })
 
-        supabase.auth.signInWithPassword({
-            email, password
-        })
-            .then(res => {
-
-                // setLoading jadi false
-                setState(prev => prev = {
-                    ...prev,
-                    isLoading: false
-                })
-
-                if (res.error) {
-                    setState(prev => prev = {
-                        ...prev,
-                        isError: true
-                    })
-                    return
-                }
-
-            })
-            .catch(err => {
-                console.error(err)
-            })
     }
+
 
     return (
         <main className={`w-[100dvw] h-[100dvh] flex flex-col justify-center items-center
         bg-gradient-to-tr from-blue-800 to-blue-500
     `}>
-
-            {state.isError ? (
-                <Alert
-                    type='error'
-                    message='Login Error !'
-                    description="Silakan check kembali data login anda !"
-                    closable
-                    showIcon
-                    className={`absolute top-2 right-auto left-auto`}
-                    onClose={()=>{
-                        setState(prev => prev = {
-                            ...prev,
-                            isError : false
-                        })
-                    }}
-                />
-            ) : null}
 
             <div className={`w-[850px] bg-white shadow-md rounded-md flex min-h-[300px]`}>
 
@@ -77,17 +45,17 @@ const Login = () => {
 
                 <div className={`flex-1 p-6`}>
 
-                    <h1 className={`text-2xl text-blue-500 font-bold`}>Login Page</h1>
+                    <h1 className={`text-2xl text-blue-500 font-bold`}>Register Page</h1>
 
                     <Form
-                        name='login-form'
+                        name='register-form'
                         labelCol={{
                             span: 8
                         }}
                         wrapperCol={{
                             span: 16
                         }}
-                        onFinish={handleSubmit}
+                        onFinish={ handleSubmit }
                         className={`flex flex-col gap-4`}
                     >
 
@@ -121,17 +89,27 @@ const Login = () => {
                             <Input.Password size='large' />
                         </Form.Item>
 
+                        <Form.Item
+                            label="repassword"
+                            id='repassword'
+                            name='repassword'
+                            rules={[{
+                                required: true,
+                                message: "repassword wajib di isi.."
+                            }]}
+                        >
+                            <Input.Password size='large' />
+                        </Form.Item>
+
                         <Button type='primary' htmlType='submit'
                             className={`ml-auto`}
                             size='large'
-                            disabled={state.isLoading}
-                            loading={state.isLoading}
                         >
-                            Login
+                            Register
                         </Button>
 
-                        <NavLink to={'/register'}>
-                            dont have account ? Register Here
+                        <NavLink to={'/'}>
+                            have account ? Login Here
                         </NavLink>
 
                     </Form>
@@ -144,4 +122,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Register
